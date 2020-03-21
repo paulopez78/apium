@@ -1,0 +1,20 @@
+version: "3.7"
+
+services:
+  voting:
+    image: ${REGISTRY:-paulopez}/votingapp:${VERSION:-0.1}
+    build:
+      context: ./src/votingapp
+      # dockerfile: ./src/votingapp/Dockerfile
+    environment:
+      REDIS: mycache:6379
+
+  mycache:
+    image: redis
+
+  voting-test:
+    image: votingapp-test
+    build:
+      context: ./test
+    environment:
+      VOTING_URL: voting2:5000

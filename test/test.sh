@@ -19,7 +19,7 @@ retry(){
 
 # test
 test() {
-    votingurl="${VOTING_URL}/vote"
+    votingurl="${VOTING_URL:-"localhost"}/vote"
     curl --url  "$votingurl" \
         --request POST \
         --data '{"topics":["dev", "ops"]}' \

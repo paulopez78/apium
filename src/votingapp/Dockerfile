@@ -1,4 +1,4 @@
-FROM golang:1.14 AS builder
+FROM golang:1.14-alpine AS builder
 
 WORKDIR /app
 
@@ -8,6 +8,7 @@ RUN go mod download
 
 COPY . .
 
+ENV CGO_ENABLED=0 
 RUN go test
 RUN go build -o build/votingapp && cp -r ./ui ./build
 
@@ -15,7 +16,7 @@ RUN go build -o build/votingapp && cp -r ./ui ./build
 # RUNTIME IMAGE
 ##########################################################
 
-FROM ubuntu
+FROM alpine
 WORKDIR /app
 COPY --from=builder /app/build .
 ENTRYPOINT [ "./votingapp" ]
