@@ -1,6 +1,15 @@
 version: "3.7"
 
 services:
+  proxy:
+    image: nginx
+    # build:
+    #   context: ./nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 8080:80
+
   voting:
     image: ${REGISTRY:-paulopez}/votingapp:${VERSION:-0.1}
     build:
@@ -17,4 +26,4 @@ services:
     build:
       context: ./test
     environment:
-      VOTING_URL: voting2:5000
+      VOTING_URL: http://proxy:80

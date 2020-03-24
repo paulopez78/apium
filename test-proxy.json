@@ -1,0 +1,19 @@
+{
+    "kind": "Pod",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "test-proxy",
+        "labels": {
+            "app": "test-proxy",
+            "env": "staging"
+        }
+    },
+    "spec": {
+        "containers": [
+            {
+                "name": "test-proxy",
+                "image": "nginx"
+            }
+        ]
+    }
+}
