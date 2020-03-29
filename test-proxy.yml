@@ -5,7 +5,47 @@ metadata:
     app: test-proxy
     env: staging
   name: test-proxy
+  # namespace: workshop
 spec:
+  volumes:
+    - name: logs
+      # emptyDir: {}
+      hostPath:
+        path: /tmp/logs
+
   containers:
     - image: nginx
       name: test-proxy
+      livenessProbe:
+        timeoutSeconds: 5
+        periodSeconds: 5
+        successThreshold: 1
+        failureThreshold: 3
+        httpGet:
+          path: /
+          port: 80
+
+      volumeMounts:
+        - name: logs
+          mountPath: /var/log/nginx
+
+    - image: paulopez/kurl:0.1-alpine
+      name: log-collector
+      volumeMounts:
+        - name: logs
+          mountPath: /logs
+      readinessProbe:
+        timeoutSeconds: 5
+        periodSeconds: 5
+        successThreshold: 1
+        failureThreshold: 3
+        exec:
+          command:
+            - cat
+            - /tmp/ready
+
+      command:
+        - sh
+      args:
+        - -c
+        - sleep 30 && touch /tmp/ready && sleep 9999;
