@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: votingapp-beta
+spec:
+  # START DEPLOYMENT WITH NO REPLICAS
+  replicas: 1
+  selector:
+    matchLabels:
+      app: votingapp
+      # TAG FOR DEPLOYMENT
+      deployment: v0.2
+  template:
+    metadata:
+      labels:
+        app: votingapp
+        # TAG FOR DEPLOYMENT
+        deployment: v0.2
+      name: votingapp
+    spec:
+      containers:
+        - image: paulopez/votingapp:0.2-beta
+          name: votingapp
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1
+            httpGet:
+              path: /ready
+              port: 5000
